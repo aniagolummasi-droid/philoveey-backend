@@ -51,6 +51,105 @@ export async function renderAdminDashboard(req, res, next) {
   }
 }
 
+export function renderAdminLogin(req, res) {
+  res.render('admin-login', {
+    title: 'Admin Login',
+    error: req.query.error,
+    success: req.query.success,
+  })
+}
+
+export function renderAdminRegister(req, res) {
+  res.render('admin-register', {
+    title: 'Admin Register',
+    adminEmail: process.env.ADMIN_EMAIL || '',
+    adminPassword: process.env.ADMIN_PASSWORD || '',
+    adminName: process.env.ADMIN_NAME || 'Philoveey Admin',
+    error: req.query.error,
+    success: req.query.success,
+  })
+}
+
+async function ensureEnvAdmin(email, password, name) {
+  if (
+    email !== process.env.ADMIN_EMAIL ||
+    password !== process.env.ADMIN_PASSWORD
+  ) {
+    const error = new Error('Invalid admin credentials')
+    error.statusCode = 401
+    throw error
+  }
+
+  const adminName = name || process.env.ADMIN_NAME || 'Admin'
+  let admin = await User.findOne({ email })
+
+  if (!admin) {
+    admin = await User.create({
+      email,
+      name: adminName,
+      password,
+      role: 'admin',
+    })
+  } else {
+    let updated = false
+
+    if (admin.role !== 'admin') {
+      admin.role = 'admin'
+      updated = true
+    }
+
+    if (admin.name !== adminName) {
+      admin.name = adminName
+      updated = true
+    }
+
+    if (!(await admin.matchPassword(password))) {
+      admin.password = password
+      updated = true
+    }
+
+    if (updated) {
+      await admin.save()
+    }
+  }
+
+  return admin
+}
+
+export async function handleAdminLogin(req, res, next) {
+  try {
+    const { email, password } = req.body
+
+    if (!email || !password) {
+      res.redirect('/admin/login?error=Email%20and%20password%20are%20required')
+      return
+    }
+
+    await ensureEnvAdmin(email, password)
+    res.redirect('/admin?success=Admin%20signed%20in')
+  } catch (error) {
+    const message = encodeURIComponent(error.message || 'Login failed')
+    res.redirect(`/admin/login?error=${message}`)
+  }
+}
+
+export async function handleAdminRegister(req, res, next) {
+  try {
+    const { name, email, password } = req.body
+
+    if (!email || !password) {
+      res.redirect('/admin/register?error=Email%20and%20password%20are%20required')
+      return
+    }
+
+    await ensureEnvAdmin(email, password, name)
+    res.redirect('/admin/register?success=Admin%20created%20or%20updated')
+  } catch (error) {
+    const message = encodeURIComponent(error.message || 'Register failed')
+    res.redirect(`/admin/register?error=${message}`)
+  }
+}
+
 export async function renderAdminProducts(req, res, next) {
   try {
     const products = await Product.find({ isActive: true }).sort({ createdAt: -1 })

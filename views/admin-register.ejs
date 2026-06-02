@@ -1,0 +1,31 @@
+<%- include('partials/header', { title }) %>
+
+<section class="section-heading">
+  <h1>Admin Register</h1>
+  <p>Create or update the backend admin account using environment credentials.</p>
+</section>
+
+<% if (error) { %>
+  <div class="notice error"><%= error %></div>
+<% } %>
+<% if (success) { %>
+  <div class="notice success"><%= success %></div>
+<% } %>
+
+<form class="product-form" action="/admin/register" method="post">
+  <label>
+    <span>Name</span>
+    <input type="text" name="name" value="<%= adminName %>" />
+  </label>
+  <label>
+    <span>Email</span>
+    <input type="email" name="email" required value="<%= adminEmail %>" />
+  </label>
+  <label>
+    <span>Password</span>
+    <input type="password" name="password" required value="<%= adminPassword %>" />
+  </label>
+  <button class="button" type="submit">Create Admin</button>
+</form>
+
+<%- include('partials/footer') %>

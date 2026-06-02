@@ -7,6 +7,7 @@ import morgan from 'morgan'
 import connectDB from './config/db.js'
 import { errorHandler, notFound } from './middleware/errorMiddleware.js'
 import authRoutes from './routes/authRoutes.js'
+import adminAuthRoutes from './routes/adminAuthRoutes.js'
 import cartRoutes from './routes/cartRoutes.js'
 import orderRoutes from './routes/orderRoutes.js'
 import paymentRoutes from './routes/paymentRoutes.js'
@@ -26,6 +27,7 @@ const productionOrigins = [
   'https://philoveey.vercel.app',
   'https://philoveeystore.com.ng',
   'https://www.philoveeystore.com.ng',
+  'https://philoveey-backend.onrender.com',
 ]
 const allowedOrigins = [
   process.env.CLIENT_URL,
@@ -70,6 +72,7 @@ app.get('/api/health', (req, res) => {
 
 app.use('/', viewRoutes)
 app.use('/api/auth', authRoutes)
+app.use('/api/admin', adminAuthRoutes)
 app.use('/api/cart', cartRoutes)
 app.use('/api/products', productRoutes)
 app.use('/api/orders', orderRoutes)

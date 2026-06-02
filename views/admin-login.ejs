@@ -1,0 +1,27 @@
+<%- include('partials/header', { title }) %>
+
+<section class="section-heading">
+  <h1>Admin Login</h1>
+  <p>Use the secure backend admin credentials from your environment variables.</p>
+</section>
+
+<% if (error) { %>
+  <div class="notice error"><%= error %></div>
+<% } %>
+<% if (success) { %>
+  <div class="notice success"><%= success %></div>
+<% } %>
+
+<form class="product-form" action="/admin/login" method="post">
+  <label>
+    <span>Email</span>
+    <input type="email" name="email" required />
+  </label>
+  <label>
+    <span>Password</span>
+    <input type="password" name="password" required />
+  </label>
+  <button class="button" type="submit">Sign In</button>
+</form>
+
+<%- include('partials/footer') %>

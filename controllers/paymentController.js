@@ -3,7 +3,17 @@ import Order from '../models/Order.js'
 import Transaction from '../models/Transaction.js'
 
 function getClientUrl() {
-  return (process.env.CLIENT_URL || 'http://localhost:5173').split(',')[0].trim()
+  if (process.env.CLIENT_URL) {
+    return process.env.CLIENT_URL.split(',')[0].trim()
+  }
+
+  return process.env.NODE_ENV === 'production'
+    ? 'https://philoveeystore.com.ng'
+    : 'http://localhost:5173'
+}
+
+function getPaystackCallbackUrl() {
+  return process.env.PAYSTACK_CALLBACK_URL || `${getClientUrl()}/#payment-status`
 }
 
 function getPaystackSecretKey() {
@@ -99,7 +109,7 @@ export async function initializePayment(req, res, next) {
         amount: order.total * 100,
         email: order.user.email,
         reference: `PHILOVEEY-${order._id}-${Date.now()}`,
-        callback_url: `${getClientUrl()}/#payment-status`,
+        callback_url: getPaystackCallbackUrl(),
         metadata: { orderId: order._id.toString() },
       }),
     })
