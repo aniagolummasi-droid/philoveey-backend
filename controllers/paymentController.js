@@ -3,13 +3,17 @@ import Order from '../models/Order.js'
 import Transaction from '../models/Transaction.js'
 
 function getClientUrl() {
-  if (process.env.CLIENT_URL) {
-    return process.env.CLIENT_URL.split(',')[0].trim()
+  const clientUrl = (process.env.CLIENT_URL || '').split(',')[0].trim()
+
+  if (process.env.NODE_ENV === 'production') {
+    if (clientUrl && !clientUrl.includes('localhost') && !clientUrl.includes('127.0.0.1')) {
+      return clientUrl
+    }
+
+    return 'https://philoveeystore.com.ng'
   }
 
-  return process.env.NODE_ENV === 'production'
-    ? 'https://philoveeystore.com.ng'
-    : 'http://localhost:5173'
+  return clientUrl || 'http://localhost:5173'
 }
 
 function getPaystackCallbackUrl() {

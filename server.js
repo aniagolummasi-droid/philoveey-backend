@@ -14,6 +14,19 @@ import paymentRoutes from './routes/paymentRoutes.js'
 import productRoutes from './routes/productRoutes.js'
 import viewRoutes from './routes/viewRoutes.js'
 
+function parseSimpleCookies(cookieHeader) {
+  const cookies = {}
+
+  if (!cookieHeader) return cookies
+
+  cookieHeader.split(';').forEach((cookie) => {
+    const [name, value] = cookie.split('=')
+    if (name) cookies[name.trim()] = (value || '').trim()
+  })
+
+  return cookies
+}
+
 dotenv.config()
 
 connectDB()
@@ -56,6 +69,10 @@ app.use(
 )
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use((req, res, next) => {
+  req.cookies = parseSimpleCookies(req.headers.cookie || '')
+  next()
+})
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
 app.use(express.static(path.join(__dirname, 'public')))

@@ -2,6 +2,7 @@ import Order from '../models/Order.js'
 import Product from '../models/Product.js'
 import User from '../models/User.js'
 import { uploadImage } from '../utils/cloudinary.js'
+import { createAdminSession, invalidateAdminSession } from '../middleware/adminAuthMiddleware.js'
 
 function slugify(value) {
   return value
@@ -126,6 +127,12 @@ export async function handleAdminLogin(req, res, next) {
     }
 
     await ensureEnvAdmin(email, password)
+    const sessionId = createAdminSession()
+
+    res.setHeader(
+      'Set-Cookie',
+      `adminSessionId=${sessionId}; Path=/; HttpOnly; SameSite=Lax; Max-Age=86400`,
+    )
     res.redirect('/admin?success=Admin%20signed%20in')
   } catch (error) {
     const message = encodeURIComponent(error.message || 'Login failed')
@@ -148,6 +155,16 @@ export async function handleAdminRegister(req, res, next) {
     const message = encodeURIComponent(error.message || 'Register failed')
     res.redirect(`/admin/register?error=${message}`)
   }
+}
+
+export function handleAdminLogout(req, res) {
+  const sessionId = req.cookies?.adminSessionId
+  if (sessionId) {
+    invalidateAdminSession(sessionId)
+  }
+
+  res.setHeader('Set-Cookie', 'adminSessionId=; Path=/; HttpOnly; Max-Age=0')
+  res.redirect('/admin/login?success=Signed%20out')
 }
 
 export async function renderAdminProducts(req, res, next) {
