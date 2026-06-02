@@ -1,0 +1,8 @@
+Server running on port 5000
+MongoDB connected: 127.0.0.1
+[0mGET /api/products [32m200[0m 71.261 ms - 1906[0m
+[0mPOST /api/auth/register [32m201[0m 124.919 ms - 339[0m
+[0mPOST /api/cart [32m201[0m 49.984 ms - 568[0m
+[0mGET /api/auth/profile [32m200[0m 2.429 ms - 238[0m
+[0mPOST /api/orders [32m201[0m 17.444 ms - 484[0m
+[0mGET /api/orders/my-orders [32m200[0m 4.331 ms - 486[0m

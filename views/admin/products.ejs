@@ -1,0 +1,111 @@
+<%- include('../partials/header', { title }) %>
+
+<section class="section-heading">
+  <p class="eyebrow">Admin</p>
+  <h1>Products</h1>
+</section>
+
+<section class="panel">
+  <h2>Add product</h2>
+
+  <% if (typeof success !== 'undefined' && success) { %>
+    <p class="notice success"><%= success %></p>
+  <% } %>
+
+  <% if (typeof error !== 'undefined' && error) { %>
+    <p class="notice error"><%= error %></p>
+  <% } %>
+
+  <form class="product-form" action="/admin/products" enctype="multipart/form-data" method="post">
+    <label>
+      <span>Name</span>
+      <input name="name" placeholder="Classic Slide" required />
+    </label>
+
+    <label>
+      <span>Price</span>
+      <input min="0" name="price" placeholder="15000" required type="number" />
+    </label>
+
+    <label>
+      <span>Category</span>
+      <select name="category" required>
+        <option value="">Select category</option>
+        <option>Men</option>
+        <option>Women</option>
+        <option>Unisex</option>
+      </select>
+    </label>
+
+    <label>
+      <span>Stock</span>
+      <input min="0" name="stock" placeholder="10" type="number" />
+    </label>
+
+    <label>
+      <span>Color</span>
+      <input name="color" placeholder="Black" />
+    </label>
+
+    <label>
+      <span>Sizes</span>
+      <input name="sizes" placeholder="39, 40, 41, 42" />
+    </label>
+
+    <label class="form-wide">
+      <span>Description</span>
+      <textarea name="description" placeholder="Short product description"></textarea>
+    </label>
+
+    <label class="form-wide">
+      <span>Image</span>
+      <input accept="image/*" name="image" required type="file" />
+    </label>
+
+    <label class="check-field">
+      <input name="bestSeller" type="checkbox" />
+      <span>Best seller</span>
+    </label>
+
+    <button class="button" type="submit">Add Product</button>
+  </form>
+</section>
+
+<section class="panel">
+  <% if (products.length) { %>
+    <table>
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% products.forEach((product) => { %>
+          <tr>
+            <td>
+              <img class="product-thumb" src="<%= product.imageUrl %>" alt="<%= product.name %>" />
+            </td>
+            <td><%= product.name %></td>
+            <td><%= product.category %></td>
+            <td>N<%= product.price.toLocaleString() %></td>
+            <td><%= product.stock %></td>
+            <td>
+              <form action="/admin/products/<%= product._id %>/delete" method="post">
+                <button class="button danger compact" type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>No products yet. Use the form above to create one.</p>
+  <% } %>
+</section>
+
+<%- include('../partials/footer') %>

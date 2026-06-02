@@ -1,0 +1,31 @@
+<%- include('partials/header', { title }) %>
+
+<section class="hero">
+  <p class="eyebrow">Backend API</p>
+  <h1>Philoveey Store Backend</h1>
+  <p>
+    API, uploads, products, carts, orders, payments, and admin views are ready
+    to connect with the frontend.
+  </p>
+  <div class="actions">
+    <a class="button" href="/admin">Open Dashboard</a>
+    <a class="button secondary" href="/api/health">Check API</a>
+  </div>
+</section>
+
+<section class="grid">
+  <article>
+    <h2>Auth</h2>
+    <p>Register, login, and profile routes are available at /api/auth.</p>
+  </article>
+  <article>
+    <h2>Products</h2>
+    <p>Manage products and uploaded product images at /api/products.</p>
+  </article>
+  <article>
+    <h2>Orders</h2>
+    <p>Create and track customer orders at /api/orders.</p>
+  </article>
+</section>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,37 @@
+<%- include('../partials/header', { title }) %>
+
+<section class="section-heading">
+  <p class="eyebrow">Admin</p>
+  <h1>Orders</h1>
+</section>
+
+<section class="panel">
+  <% if (orders.length) { %>
+    <table>
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Phone</th>
+          <th>Total</th>
+          <th>Payment</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% orders.forEach((order) => { %>
+          <tr>
+            <td><%= order.user?.name || order.shippingAddress?.fullName || 'Customer' %></td>
+            <td><%= order.user?.phone || order.shippingAddress?.phone || '-' %></td>
+            <td>N<%= order.total.toLocaleString() %></td>
+            <td><%= order.paymentStatus %></td>
+            <td><%= order.orderStatus %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>No orders yet.</p>
+  <% } %>
+</section>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,51 @@
+<%- include('../partials/header', { title }) %>
+
+<section class="section-heading">
+  <p class="eyebrow">Admin</p>
+  <h1>Dashboard</h1>
+</section>
+
+<section class="stats">
+  <article>
+    <span>Products</span>
+    <strong><%= productCount %></strong>
+  </article>
+  <article>
+    <span>Orders</span>
+    <strong><%= orderCount %></strong>
+  </article>
+  <article>
+    <span>Users</span>
+    <strong><%= userCount %></strong>
+  </article>
+</section>
+
+<section class="panel">
+  <h2>Recent Orders</h2>
+  <% if (recentOrders.length) { %>
+    <table>
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Total</th>
+          <th>Payment</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% recentOrders.forEach((order) => { %>
+          <tr>
+            <td><%= order.user?.name || 'Customer' %></td>
+            <td>N<%= order.total.toLocaleString() %></td>
+            <td><%= order.paymentStatus %></td>
+            <td><%= order.orderStatus %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>No orders yet.</p>
+  <% } %>
+</section>
+
+<%- include('../partials/footer') %>
