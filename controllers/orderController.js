@@ -1,7 +1,6 @@
 import Order from '../models/Order.js'
 import Product from '../models/Product.js'
 import Transaction from '../models/Transaction.js'
-import { sendOrderEmails } from '../utils/email.js'
 
 async function buildOrderItems(items) {
   const orderItems = []
@@ -71,10 +70,6 @@ export async function createOrder(req, res, next) {
         }),
       ),
     )
-
-    sendOrderEmails({ order, user: req.user }).catch((emailError) => {
-      console.error(`Order email failed: ${emailError.message}`)
-    })
 
     res.status(201).json(order)
   } catch (error) {

@@ -1,6 +1,7 @@
 import crypto from 'crypto'
 import Order from '../models/Order.js'
 import Transaction from '../models/Transaction.js'
+import { sendOrderEmails } from '../utils/email.js'
 
 function getClientUrl() {
   const clientUrl = (process.env.CLIENT_URL || '').split(',')[0].trim()
@@ -69,7 +70,7 @@ async function finalizePaystackPayment(paymentData) {
   }
   await order.save()
 
-  await Transaction.findOneAndUpdate(
+  const transaction = await Transaction.findOneAndUpdate(
     { reference },
     {
       amount: order.total,
@@ -82,6 +83,13 @@ async function finalizePaystackPayment(paymentData) {
     },
     { new: true, upsert: true },
   )
+
+  if (paymentStatus === 'paid') {
+    await order.populate('user', 'name email phone')
+    sendOrderEmails({ order, user: order.user }).catch((emailError) => {
+      console.error(`Order email failed: ${emailError.message}`)
+    })
+  }
 
   return order
 }
