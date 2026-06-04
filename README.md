@@ -86,6 +86,7 @@ Payments:
 POST /api/payments/initialize/:orderId
 GET  /api/payments/verify/:reference
 POST /api/payments/webhook/paystack
+POST /api/payments/webhook
 ```
 
 Configure the Paystack dashboard callback URL to:
@@ -94,10 +95,14 @@ Configure the Paystack dashboard callback URL to:
 https://philoveeystore.com.ng/#payment-status
 ```
 
-Configure the Paystack dashboard webhook URL to:
+Configure the Paystack dashboard webhook URL (choose one):
 
 ```txt
-https://YOUR_BACKEND_DOMAIN/api/payments/webhook/paystack
+https://philoveey-backend.onrender.com/api/payments/webhook/paystack
+https://philoveey-backend.onrender.com/api/payments/webhook
+```
+
+Both endpoints handle the same webhook verification and finalization logic.
 ```
 
 Set the backend environment variables in `.env`:
