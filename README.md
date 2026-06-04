@@ -88,10 +88,23 @@ GET  /api/payments/verify/:reference
 POST /api/payments/webhook/paystack
 ```
 
+Configure the Paystack dashboard callback URL to:
+
+```txt
+https://philoveeystore.com.ng/#payment-status
+```
+
 Configure the Paystack dashboard webhook URL to:
 
 ```txt
 https://YOUR_BACKEND_DOMAIN/api/payments/webhook/paystack
+```
+
+Set the backend environment variables in `.env`:
+
+```txt
+PAYSTACK_SECRET_KEY=sk_test_177eb489a594911ecd18f3493fc1b63a3ff8ecf5
+PAYSTACK_CALLBACK_URL=https://philoveeystore.com.ng/#payment-status
 ```
 
 The webhook verifies `x-paystack-signature` with `PAYSTACK_SECRET_KEY` and
