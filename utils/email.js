@@ -11,8 +11,17 @@ function createTransporter() {
       user: process.env.SMTP_USER,
     },
     host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT || 587),
-    secure: process.env.SMTP_SECURE === 'true',
+    port: 465,
+    secure: true,
+    connectionUrl: `smtps://${process.env.SMTP_USER}:${process.env.SMTP_PASS}@smtp.gmail.com:465`,
+    logger: process.env.NODE_ENV === 'production' ? false : true,
+    debug: process.env.NODE_ENV === 'production' ? false : true,
+    pool: {
+      maxConnections: 1,
+      maxMessages: 100,
+      rateDelta: 1000,
+      rateLimit: 5,
+    },
   })
 }
 
