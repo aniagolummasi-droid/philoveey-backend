@@ -13,6 +13,11 @@ router.post(
   express.raw({ type: 'application/json' }),
   handlePaystackWebhook,
 )
+router.post(
+  '/webhook',
+  express.raw({ type: 'application/json' }),
+  handlePaystackWebhook,
+)
 router.post('/initialize/:orderId', protect, initializePayment)
 router.get('/verify/:reference', protect, verifyPayment)
 
