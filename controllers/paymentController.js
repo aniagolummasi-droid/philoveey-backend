@@ -188,15 +188,19 @@ export async function verifyPayment(req, res, next) {
 
 export async function handlePaystackWebhook(req, res, next) {
   try {
-    const payload = req.body
+    const payloadBuffer =
+      req.rawBody ||
+      (typeof req.body === 'string'
+        ? Buffer.from(req.body)
+        : Buffer.from(JSON.stringify(req.body)))
     const signature = req.get('x-paystack-signature')
 
-    if (!Buffer.isBuffer(payload) || !signature) {
+    if (!payloadBuffer || !signature) {
       res.status(400)
       throw new Error('Invalid Paystack webhook payload')
     }
 
-    const expectedSignature = getPaystackSignature(payload)
+    const expectedSignature = getPaystackSignature(payloadBuffer)
     const isValidSignature =
       signature.length === expectedSignature.length &&
       crypto.timingSafeEqual(
@@ -209,7 +213,7 @@ export async function handlePaystackWebhook(req, res, next) {
       throw new Error('Invalid Paystack webhook signature')
     }
 
-    const event = JSON.parse(payload.toString('utf8'))
+    const event = JSON.parse(payloadBuffer.toString('utf8'))
 
     if (event.event === 'charge.success' || event.event === 'charge.failed') {
       await finalizePaystackPayment(event.data)

@@ -8,16 +8,8 @@ import { protect } from '../middleware/authMiddleware.js'
 
 const router = express.Router()
 
-router.post(
-  '/webhook/paystack',
-  express.raw({ type: 'application/json' }),
-  handlePaystackWebhook,
-)
-router.post(
-  '/webhook',
-  express.raw({ type: 'application/json' }),
-  handlePaystackWebhook,
-)
+router.post('/webhook/paystack', handlePaystackWebhook)
+router.post('/webhook', handlePaystackWebhook)
 router.post('/initialize/:orderId', protect, initializePayment)
 router.get('/verify/:reference', protect, verifyPayment)
 

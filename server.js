@@ -27,6 +27,12 @@ function parseSimpleCookies(cookieHeader) {
   return cookies
 }
 
+function saveRawBody(req, res, buf, encoding) {
+  if (buf && buf.length) {
+    req.rawBody = buf
+  }
+}
+
 dotenv.config()
 
 connectDB()
@@ -67,8 +73,8 @@ app.use(
     credentials: true,
   }),
 )
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(express.json({ verify: saveRawBody }))
+app.use(express.urlencoded({ extended: true, verify: saveRawBody }))
 app.use((req, res, next) => {
   req.cookies = parseSimpleCookies(req.headers.cookie || '')
   next()
